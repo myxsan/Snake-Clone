@@ -17,19 +17,19 @@ public class Snake : MonoBehaviour
     }
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.W))
+        if(Input.GetKeyDown(KeyCode.W) && _direction != Vector2.down)
         {
             _direction = Vector2.up;
         }
-        else if(Input.GetKeyDown(KeyCode.S))
+        else if(Input.GetKeyDown(KeyCode.S) && _direction != Vector2.up)
         {
             _direction = Vector2.down;
         }
-        else if(Input.GetKeyDown(KeyCode.A))
+        else if(Input.GetKeyDown(KeyCode.A) && _direction != Vector2.right)
         {
             _direction = Vector2.left;
         }
-        else if(Input.GetKeyDown(KeyCode.D))
+        else if(Input.GetKeyDown(KeyCode.D) && _direction != Vector2.left)
         {
             _direction = Vector2.right;
         }
@@ -81,7 +81,7 @@ public class Snake : MonoBehaviour
         {
             Grow();
         }
-        else if(other.tag == "Obstacle")
+        else if(other.tag == "Obstacle" || other.tag == "Segment")
         {
             ResetState();
         }
