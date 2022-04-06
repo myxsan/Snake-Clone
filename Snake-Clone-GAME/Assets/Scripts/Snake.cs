@@ -7,11 +7,13 @@ public class Snake : MonoBehaviour
     private Vector2 _direction = Vector2.right;
     private List<Transform> _segments;
     public Transform segmentPrefab;
+    public int initialSize = 3;
 
     private void Start() 
     {
         _segments = new List<Transform>();
-        _segments.Add (this.transform);    
+        _segments.Add (this.transform);
+        SetStartSize();
     }
     private void Update()
     {
@@ -32,7 +34,7 @@ public class Snake : MonoBehaviour
             _direction = Vector2.right;
         }
     }
-    private async void FixedUpdate()
+    private void FixedUpdate()
     {
         for (int i = _segments.Count -1; i > 0; i--)
         {
@@ -45,6 +47,14 @@ public class Snake : MonoBehaviour
             0.0f
         );
     }
+
+    private void SetStartSize()
+    {
+        for (int i = 1; i < initialSize; i++)
+        {
+            _segments.Add(Instantiate(segmentPrefab));
+        }
+    }
     private void Grow()
     {
         Transform segment = Instantiate(this.segmentPrefab);
@@ -52,11 +62,28 @@ public class Snake : MonoBehaviour
 
         _segments.Add(segment);
     }
+    private void ResetState()
+    {
+        for (int i = 1; i < _segments.Count; i++)
+        {
+            Destroy(_segments[i].gameObject);
+        }
+
+        _segments.Clear();
+        _segments.Add(this.transform);
+
+        this.transform.position = Vector3.zero;
+        SetStartSize();
+    }
     private void OnTriggerEnter2D(Collider2D other)
     {
         if(other.tag == "Food")
         {
             Grow();
+        }
+        else if(other.tag == "Obstacle")
+        {
+            ResetState();
         }
     }
 }
